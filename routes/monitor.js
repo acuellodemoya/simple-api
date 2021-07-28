@@ -29,6 +29,21 @@ const schema = Joi.object({
 });
 
 //Rutas
+router.get('/', (req, res) => { //GET (lista de usuarios)
+    let resultado = listarMonitores();
+    resultado.then(monitores => {
+            res.status(200).json(monitores)
+        }).catch(err => {
+            res.status(400).json({err})
+        });
+});
+
+
+//Otras funciones
+const listarMonitores = async () => {
+    let monitores = await Monitor.find({"estado": true});
+    return monitores;
+};
 
 
 module.exports = router;

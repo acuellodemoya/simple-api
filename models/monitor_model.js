@@ -28,6 +28,10 @@ const monitorSchema = new mongoose.Schema({
     correo: {
         type: String,
         required: true
+    },
+    estado: {
+        type: Boolean,
+        default: true
     }
 });
 
