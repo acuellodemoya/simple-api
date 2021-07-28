@@ -5,7 +5,7 @@ const router = express.Router();
 
 //Esquema de validaciones
 const schema = Joi.object({
-    nombre: Joi.string()
+    nombres: Joi.string()
         .min(3)
         .max(20)
         .required(),
@@ -38,11 +38,77 @@ router.get('/', (req, res) => { //GET (lista de usuarios)
         });
 });
 
+router.post('/', (req, res) => {
+    let body = req.body;
+
+    const {error, value} = schema.validate({
+        nombres: body.nombres,
+        apellidos: body.apellidos,
+        programa: body.programa,
+        semestre: body.semestre,
+        cedula: body.cedula,
+        telefono: body.telefono,
+        correo: body.correo
+    });
+
+    if(!error){
+        let resultado = crearMonitor(body);
+
+        resultado.then( monitor => {
+            res.json({
+                valor: monitor
+            });
+        }).catch(err => {
+            res.status(400).json({ err: err });
+        });
+    }else{
+        res.status(400).json({ error: error});
+    }
+});
+
 
 //Otras funciones
 const listarMonitores = async () => {
     let monitores = await Monitor.find({"estado": true});
     return monitores;
+};
+
+const crearMonitor = async (body) => {
+    let monitor = new Monitor({
+        nombres: body.nombres,
+        apellidos: body.apellidos,
+        programa: body. programa,
+        semestre: body.semestre,
+        cedula: body.cedula,
+        telefono: body.telefono,
+        correo: body.correo
+    });
+
+    return await monitor.save();
+};
+
+const actualizarMonitor = async (cedula, body) => {
+    let monitor = await Monitor.findOneAndUpdate({"cedula": cedula}, {
+        $set: {
+            nombres: body.nombres,
+            apellidos: body.apellidos,
+            programa: body.programa,
+            semestre: body.semestre,
+            cedula: body.cedula,
+            telefono: body.telefono,
+            correo: body.correo
+        }
+    }, {new: true});
+    return monitor;
+};
+
+const eliminarMonitor = async (cedula) => {
+    let monitor = await Monitor.findOneAndUpdate({"cedula": cedula}, {
+        $set: {
+            estado: false
+        }
+    }, {new: true});
+    return monitor;
 };
 
 
