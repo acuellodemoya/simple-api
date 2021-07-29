@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 const Monitor = require('./monitor_model');
 
 const monitoriaSchema = new mongoose.Schema({
@@ -8,8 +7,7 @@ const monitoriaSchema = new mongoose.Schema({
         required: true
     },
     monitor: {
-        type: Schema.ObjectId,
-        ref: "Monitor",
+        type: String, //Se solicita la cedula del monitor
         required: true
     },
     fecha: {
@@ -19,6 +17,10 @@ const monitoriaSchema = new mongoose.Schema({
     salon: {
         type: String,
         required: true
+    },
+    estado: {
+        type: Boolean,
+        default: true
     }
 });
 

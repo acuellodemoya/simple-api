@@ -56,7 +56,7 @@ router.post('/', async (req, res) => {
 
         resultado.then( monitor => {
             res.json({
-                valor: monitor
+                mensaje: '¡Monitor creado exitosamente!'
             });
         }).catch(err => {
             res.status(400).json({ err: err });
@@ -81,7 +81,7 @@ router.put('/:id', (req, res) => {
     if(!error){
         let resultado = actualizarMonitor(req.params.id, body);
         resultado.then(valor => {
-            res.json({valor: valor})
+            res.json({mensaje: '¡Modificado exitosamente!'})
         }).catch(err => {
             res.status(400).json({err: err});
         });
