@@ -1,5 +1,5 @@
 const express = require('express');
-const Monitor = require('../models/monitor_model');
+const Monitoria = require('../models/monitoria_model');
 const Joi = require('Joi');
 const router = express.Router();
 

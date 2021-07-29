@@ -5,6 +5,7 @@ const router = express.Router();
 
 //Esquema de validaciones
 const schema = Joi.object({
+
     nombres: Joi.string()
         .min(3)
         .max(20)
@@ -38,9 +39,8 @@ router.get('/', (req, res) => { //GET (lista de usuarios)
         });
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     let body = req.body;
-
     const {error, value} = schema.validate({
         nombres: body.nombres,
         apellidos: body.apellidos,
@@ -66,6 +66,41 @@ router.post('/', (req, res) => {
     }
 });
 
+router.put('/:id', (req, res) => {
+    let body = req.body;
+    const {error, value} = schema.validate({
+        nombres: body.nombres,
+        apellidos: body.apellidos,
+        programa: body.programa,
+        semestre: body.semestre,
+        cedula: body.cedula,
+        telefono: body.telefono,
+        correo: body.correo
+    });
+
+    if(!error){
+        let resultado = actualizarMonitor(req.params.id, body);
+        resultado.then(valor => {
+            res.json({valor: valor})
+        }).catch(err => {
+            res.status(400).json({err: err});
+        });
+    }else{
+        res.status(400).json({error: error});
+    }
+});
+
+router.delete('/:id', (req, res) => {
+    let resultado = eliminarMonitor(req.params.id);
+    resultado.then(valor => {
+        res.json({
+            mensaje: "Eliminado Exitosamente"
+        })
+    }).catch(err => {
+        res.status(400).json({err: err })
+    });
+});
+
 
 //Otras funciones
 const listarMonitores = async () => {
@@ -87,8 +122,8 @@ const crearMonitor = async (body) => {
     return await monitor.save();
 };
 
-const actualizarMonitor = async (cedula, body) => {
-    let monitor = await Monitor.findOneAndUpdate({"cedula": cedula}, {
+const actualizarMonitor = async (id, body) => {
+    let monitor = await Monitor.findOneAndUpdate({"_id": id}, {
         $set: {
             nombres: body.nombres,
             apellidos: body.apellidos,
@@ -102,8 +137,8 @@ const actualizarMonitor = async (cedula, body) => {
     return monitor;
 };
 
-const eliminarMonitor = async (cedula) => {
-    let monitor = await Monitor.findOneAndUpdate({"cedula": cedula}, {
+const eliminarMonitor = async (id) => {
+    let monitor = await Monitor.findOneAndUpdate({"_id": id}, {
         $set: {
             estado: false
         }

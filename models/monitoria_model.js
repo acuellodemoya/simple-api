@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 const Monitor = require('./monitor_model');
 
 const monitoriaSchema = new mongoose.Schema({
